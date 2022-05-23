@@ -2,27 +2,21 @@ package config
 
 import (
 	"fmt"
-
 	"github.com/spf13/viper"
 	"github.com/yudai/pp"
 )
 
 type Config struct {
-	Server               Server
-	DriverLocation       DriverLocation
-	LogLevel             string
-	SecretKey            string
-	SecretKeyForExternal string
-	Aud                  string
-	Iss                  string
+	Server    Server
+	MongoDB   MongoConfig
+	LogLevel  string
+	SecretKey string
+	Aud       string
+	Iss       string
 }
 
 type Server struct {
 	Port int
-}
-
-type DriverLocation struct {
-	BaseUrl string
 }
 
 func New(configPath, configName string) (*Config, error) {
