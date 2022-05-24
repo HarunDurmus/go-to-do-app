@@ -1,16 +1,14 @@
-appname: "go-todoapp-app"
+appname: "go-to-do-app"
 server:
-  port: 3001
+  port: 3003
 logLevel: "debug"
 secretKey: "secret_key_for_todo_app"
 secretKeyForExternal: "secret_key_for_todo_app"
 aud: api.todoapi.com
 iss: todoapi.com
-todoapp:
-  baseUrl: "http://localhost:3000"
 mongoDB:
-  url: "mongodb://root:root123456@localhost:27018"
+  url: "mongodb://localhost:27018"
   dbName: "todo_app_db"
   collection: "todolist"
   username: "root"
-  password: "123456"
+  password: "root123456"

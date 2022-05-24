@@ -25,7 +25,7 @@ func NewHandler(logger *zap.Logger, driverlocationService LocationService) *Hand
 		logger:  logger,
 		service: driverlocationService,
 	}
-	hystrix.ConfigureCommand("driver-location-api", hystrix.CommandConfig{
+	hystrix.ConfigureCommand("go-to-do-ap", hystrix.CommandConfig{
 		Timeout:               5000,
 		MaxConcurrentRequests: 100,
 		ErrorPercentThreshold: 25,
@@ -44,7 +44,7 @@ func NewHandler(logger *zap.Logger, driverlocationService LocationService) *Hand
 // @Router /init [post]
 func (h *Handler) InitializeDatabase(ctx echo.Context) error {
 	output := make(chan bool, 1)
-	errs := hystrix.Go("driver-location-api", func() error {
+	errs := hystrix.Go("go-to-do-app", func() error {
 
 		h.logger.Info("Initializing data ...")
 		err := h.service.InitializeData(ctx.Request().Context())

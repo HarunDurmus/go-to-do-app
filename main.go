@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/harundurmus/go-to-do-app/config"
+	_ "github.com/harundurmus/go-to-do-app/docs"
 	"github.com/harundurmus/go-to-do-app/internal/client"
 	custommiddleware "github.com/harundurmus/go-to-do-app/internal/middleware"
 	"github.com/harundurmus/go-to-do-app/internal/todoapp"
@@ -28,18 +29,18 @@ func main() {
 	logger := buildLogger(conf.LogLevel)
 
 	server := NewServer(conf)
-	client := client.ConnectMongoDb(conf.MongoDB)
+	connectMongoDb := client.ConnectMongoDb(conf.MongoDB)
 	_ = custommiddleware.AuthMiddleware{
 		SecretKey: conf.SecretKey,
 		Aud:       conf.Aud,
 		Iss:       conf.Iss,
 	}
-	repository := todoapp.NewRepository(client, conf.MongoDB)
+	repository := todoapp.NewRepository(connectMongoDb, conf.MongoDB)
 	service := todoapp.NewService(repository, logger)
 	handler := todoapp.NewHandler(logger, service)
 	server.e.GET("/swagger/*", echoSwagger.WrapHandler)
 	server.e.POST("/init", handler.InitializeDatabase)
-
+	_ = server.Start()
 }
 
 func buildLogger(logLevel string) *zap.Logger {

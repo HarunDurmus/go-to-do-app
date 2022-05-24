@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/labstack/echo/v4"
 	"net/http"
 	"time"
 
 	"github.com/harundurmus/go-to-do-app/config"
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/tylerb/graceful"
 )

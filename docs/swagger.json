@@ -1,0 +1,42 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/init": {
+            "post": {
+                "description": "Import data from uploaded csv file.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Import data from csv file.",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/todoapp.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "todoapp.Response": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "description": "error message of response that return from api\nin: string",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,28 @@
+definitions:
+  todoapp.Response:
+    properties:
+      error:
+        description: |-
+          error message of response that return from api
+          in: string
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /init:
+    post:
+      consumes:
+      - '*/*'
+      description: Import data from uploaded csv file.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/todoapp.Response'
+      summary: Import data from csv file.
+swagger: "2.0"
