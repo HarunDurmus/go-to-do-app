@@ -1,15 +1,48 @@
 definitions:
   todoapp.Response:
     properties:
+      data:
+        $ref: '#/definitions/todoapp.ToDoList'
       error:
         description: |-
           error message of response that return from api
           in: string
         type: string
     type: object
+  todoapp.ToDoList:
+    properties:
+      _id:
+        type: string
+      status:
+        type: boolean
+      task:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
+  /create-task:
+    post:
+      consumes:
+      - '*/*'
+      description: '-----------------'
+      parameters:
+      - description: User
+        in: body
+        name: id
+        required: true
+        schema:
+          $ref: '#/definitions/todoapp.ToDoList'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/todoapp.Response'
+      summary: '-------------------------'
   /init:
     post:
       consumes:

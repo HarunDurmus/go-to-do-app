@@ -16,6 +16,40 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/create-task": {
+            "post": {
+                "description": "-----------------",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "-------------------------",
+                "parameters": [
+                    {
+                        "description": "User",
+                        "name": "id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/todoapp.ToDoList"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/todoapp.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/init": {
             "post": {
                 "description": "Import data from uploaded csv file.",
@@ -44,8 +78,25 @@ const docTemplate = `{
         "todoapp.Response": {
             "type": "object",
             "properties": {
+                "data": {
+                    "$ref": "#/definitions/todoapp.ToDoList"
+                },
                 "error": {
                     "description": "error message of response that return from api\nin: string",
+                    "type": "string"
+                }
+            }
+        },
+        "todoapp.ToDoList": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "boolean"
+                },
+                "task": {
                     "type": "string"
                 }
             }

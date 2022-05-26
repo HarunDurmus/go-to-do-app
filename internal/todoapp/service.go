@@ -10,6 +10,7 @@ const earhRadiusKm = 6371
 type (
 	Repository interface {
 		UpsertInitialData(ctx context.Context) error
+		GetAll(ctx context.Context) (locations []*Location, err error)
 	}
 
 	Service struct {
@@ -28,4 +29,8 @@ func NewService(repository Repository, logger *zap.Logger) *Service {
 func (s *Service) InitializeData(ctx context.Context) error {
 
 	return s.repository.UpsertInitialData(ctx)
+}
+
+func (s *Service) CreateTaskData(ctx context.Context, model ToDoList) (*ToDoList, error) {
+	return nil, nil
 }

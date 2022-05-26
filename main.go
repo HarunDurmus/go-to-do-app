@@ -40,6 +40,7 @@ func main() {
 	handler := todoapp.NewHandler(logger, service)
 	server.e.GET("/swagger/*", echoSwagger.WrapHandler)
 	server.e.POST("/init", handler.InitializeDatabase)
+	server.e.POST("/create-task", handler.CreateTaskData)
 	_ = server.Start()
 }
 

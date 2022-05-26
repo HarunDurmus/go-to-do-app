@@ -13,19 +13,22 @@ type repository struct {
 	config config.MongoConfig
 }
 
-func (r repository) UpsertInitialData(ctx context.Context) error {
-	coll := r.client.Database(r.config.DBName).Collection(r.config.Collection)
-	if err := r.checkCollectionExist(ctx, coll); err != nil {
-		return err
-	}
-	return nil
-}
-
 func NewRepository(client *mongo.Client, config config.MongoConfig) Repository {
 	return &repository{
 		client: client,
 		config: config,
 	}
+}
+func (r repository) UpsertInitialData(ctx context.Context) error {
+	var _ = r.client.Database(r.config.DBName).Collection(r.config.Collection)
+
+	return nil
+}
+
+func (r repository) CreateTask(ctx context.Context) error {
+	var _ = r.client.Database(r.config.DBName).Collection(r.config.Collection)
+
+	return nil
 }
 
 func (r *repository) GetAll(ctx context.Context) (locations []*Location, err error) {
