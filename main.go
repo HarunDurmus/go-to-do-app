@@ -1,68 +1,57 @@
 package main
 
 import (
-	"github.com/harundurmus/go-to-do-app/config"
-	_ "github.com/harundurmus/go-to-do-app/docs"
-	"github.com/harundurmus/go-to-do-app/internal/client"
-	custommiddleware "github.com/harundurmus/go-to-do-app/internal/middleware"
-	"github.com/harundurmus/go-to-do-app/internal/todoapp"
-	_ "github.com/harundurmus/go-to-do-app/internal/todoapp"
-	echoSwagger "github.com/swaggo/echo-swagger"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-	"log"
+	"github.com/harundurmus/go-to-do-app/internal/config"
+	"github.com/harundurmus/go-to-do-app/internal/todo"
+	"github.com/harundurmus/go-to-do-app/pkg/couchbase"
+	log "github.com/harundurmus/go-to-do-app/pkg/logger"
+	"github.com/harundurmus/go-to-do-app/pkg/server"
 	"os"
-	"strings"
+
+	"github.com/yudai/pp"
+	"go.uber.org/zap"
+)
+
+const (
+	todoAppBucketName = "todoapp"
 )
 
 func main() {
-
-	appEnv := os.Getenv("APP_ENV")
-	if appEnv == "" {
-		appEnv = "local"
+	env := os.Getenv("APP_ENV")
+	if env == "" {
+		err := os.Setenv("APP_ENV", "dev")
+		if err != nil {
+			panic(err)
+		}
 	}
+	conf, err := config.New(".config", os.Getenv("APP_ENV"))
+	if err != nil {
 
-	conf, err := config.New(".config", appEnv)
+		panic(err)
+	}
+	_, _ = pp.Println(conf)
+	logger := log.NewWith(log.Config{
+		Level: conf.LogLevel,
+	})
+	cb, err := couchbase.New(conf.Couchbase)
+	if err != nil {
+		_, _ = pp.Println(err)
+		panic(err)
+	}
+	goTodoApp, err := cb.Bucket(todoAppBucketName)
 	if err != nil {
 		panic(err)
 	}
-	logger := buildLogger(conf.LogLevel)
+	todoRepository := todo.NewRepository(cb.Cluster(), goTodoApp)
+	todoService := todo.NewService(todoRepository, logger)
+	todoHandler := todo.NewHandler(&todoService, logger)
 
-	server := NewServer(conf)
-	connectMongoDb := client.ConnectMongoDb(conf.MongoDB)
-	_ = custommiddleware.AuthMiddleware{
-		SecretKey: conf.SecretKey,
-		Aud:       conf.Aud,
-		Iss:       conf.Iss,
-	}
-	repository := todoapp.NewRepository(connectMongoDb, conf.MongoDB)
-	service := todoapp.NewService(repository, logger)
-	handler := todoapp.NewHandler(logger, service)
-	server.e.GET("/swagger/*", echoSwagger.WrapHandler)
-	server.e.POST("/init", handler.InitializeDatabase)
-	server.e.POST("/create-task", handler.CreateTaskData)
-	_ = server.Start()
+	runServer(&conf.Server, logger, todoHandler)
 }
 
-func buildLogger(logLevel string) *zap.Logger {
-	loggerConfig := zap.NewProductionConfig()
-	loggerConfig.Level = zap.NewAtomicLevelAt(getLogLevel(logLevel))
-	loggerConfig.EncoderConfig.TimeKey = "timestamp"
-	loggerConfig.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
-	logger, err := loggerConfig.Build()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return logger
-}
-
-func getLogLevel(level string) zapcore.Level {
-	switch levelFromConfig := strings.TrimSpace(level); {
-	case strings.EqualFold(levelFromConfig, "debug"):
-		return zapcore.DebugLevel
-	case strings.EqualFold(levelFromConfig, "error"):
-		return zapcore.ErrorLevel
-	default:
-		return zapcore.InfoLevel
+func runServer(conf *config.Server, logger *zap.Logger, handlers ...server.Handler) {
+	s := server.New(conf, handlers, logger)
+	if err := s.Run(); err != nil {
+		panic(err)
 	}
 }

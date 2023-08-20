@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  go_todo_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - go_todo_app_db
+    networks:
+      - go_todo_app_network
+    ports:
+      - "3004:3004"
+    container_name: go_todo_app_api
+
+  go_todo_app_db:
+    build:
+      context: .
+      dockerfile: cb.Dockerfile
+    environment:
+        COUCHBASE_ADMINISTRATOR_USERNAME: admin
+        COUCHBASE_ADMINISTRATOR_PASSWORD: 123456
+        COUCHBASE_BUCKET: todoapp
+    networks:
+      - go_todo_app_network
+    ports:
+      - "8091-8095:8091-8095"
+      - "9102:9102"
+      - "11210:11210"
+      - "11207:11207"
+
+networks:
+  go_todo_app_network:
+    driver: bridge
