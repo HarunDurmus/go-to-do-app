@@ -2,7 +2,7 @@ server:
   port: ":3004"
 loglevel: debug
 couchbase:
-  url: "localhost"
+  url: "127.0.0.1?&kv_timeout=2500&query_timeout=60000"
   username: "admin"
   password: "123456"
   buckets:
