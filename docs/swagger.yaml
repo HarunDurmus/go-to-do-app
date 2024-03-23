@@ -1,0 +1,30 @@
+definitions:
+  todo.Todo:
+    properties:
+      completed:
+        type: boolean
+      id:
+        type: string
+      task:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/todo:
+    post:
+      consumes:
+      - '*/*'
+      description: Create Or Update todo data
+      parameters:
+      - description: Todo
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/todo.Todo'
+      produces:
+      - application/json
+      responses: {}
+      summary: Create Or Update todo data
+swagger: "2.0"

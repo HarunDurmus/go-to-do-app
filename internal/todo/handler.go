@@ -26,6 +26,13 @@ func NewHandler(todoService TodoService, logger *zap.Logger) *Handler {
 	}
 }
 
+// Create Or Update todo data
+// @Summary  Create Or Update todo data
+// @Description Create Or Update todo data
+// @Accept */*
+// @Produce json
+// @Param body body Todo true "Todo"
+// @Router /api/v1/todo [post]
 func (h *Handler) CreateOrUpdate(c *fiber.Ctx) error {
 	todo := Todo{}
 	requestBody := c.Body()

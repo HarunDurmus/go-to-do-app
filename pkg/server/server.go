@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/swagger"
 	"github.com/harundurmus/go-to-do-app/internal/config"
 	errs "github.com/harundurmus/go-to-do-app/pkg/errors"
 	log "github.com/harundurmus/go-to-do-app/pkg/logger"
@@ -59,4 +60,5 @@ func healthCheck(c *fiber.Ctx) error {
 }
 func (s *Server) addRoutes() {
 	s.app.Get("/health", healthCheck)
+	s.app.Get("/swagger/*", swagger.HandlerDefault) // default
 }

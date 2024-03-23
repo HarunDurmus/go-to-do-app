@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "github.com/harundurmus/go-to-do-app/docs"
 	"github.com/harundurmus/go-to-do-app/internal/config"
 	"github.com/harundurmus/go-to-do-app/internal/todo"
 	"github.com/harundurmus/go-to-do-app/pkg/couchbase"
