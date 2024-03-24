@@ -8,6 +8,6 @@ couchbase:
   buckets:
     - name: "todoapp"
       scopes:
-        - name: "" # varsayılan kapsam
+        - name: "todoScope"
           collections:
-            - name: "todo"
+            - name: "todoCollection"

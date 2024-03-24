@@ -2,6 +2,7 @@ package todo
 
 type Todo struct {
 	ID        string `json:"id"`
-	Task      string `json:"task" bson:"task"`
-	Completed bool   `json:"completed" bson:"copleted"`
+	Title     string `json:"task" bson:"task"`
+	Task      string `json:"title" bson:"title"`
+	Completed bool   `json:"completed" bson:"completed"`
 }

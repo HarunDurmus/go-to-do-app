@@ -17,8 +17,8 @@ curl -v -u $COUCHBASE_ADMINISTRATOR_USERNAME:$COUCHBASE_ADMINISTRATOR_PASSWORD -
 # shellcheck disable=SC1101
 curl -X POST -v -u $COUCHBASE_ADMINISTRATOR_USERNAME:$COUCHBASE_ADMINISTRATOR_PASSWORD \
 http://127.0.0.1:8091/pools/default/buckets/\
-$COUCHBASE_BUCKET/scopes/_default/collections \
--d name=todo \
+$COUCHBASE_BUCKET/scopes/todoScope/collections \
+-d name=todoCollection \
 -d maxTTL=63113904
 
 
